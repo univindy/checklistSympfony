@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DetailTaskController!{% endblock %}
+{% block title %}Detail Task{% endblock %}
 
 {% block body %}
 
@@ -26,7 +26,6 @@
 		{{ form(form) }}
     <div class="my-3 row" 
 	</div>
-		<button class="btn btn-primary mx-5 col-2" type="submit">Modifier la tâche</button>
           <a class="nav-link active mx-5 col-2" href="/delete/task/{{task.id}}">
         <button class="btn btn-danger">supprimer la tâche</button>
         </a>

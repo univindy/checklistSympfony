@@ -15,33 +15,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class DetailTaskController extends AbstractController
 {
     #[Route('/detail/task/{id}', name: 'app_detail_task')]
-    public function index(int $id, ?Task $task,TaskRepository $TaskRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(int $id, TaskRepository $TaskRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
       $task = new Task();
       $task = $TaskRepository->findOneBy(array('id' => $id));
-    $form = $this->createForm(TaskFormTypeDetail::class, $task);
-    $form->handleRequest($request);
-    $data = $form->getData();
-    if ($form->isSubmitted() && $form->isValid()){
-      dd($data);
-               $task->setStade( $data->getStade());
+      if (!$task){
+        return $this->redirectToRoute('app_home');
+      }
+      $formulaire = $this->createForm(TaskFormTypeDetail::class,$task);
+      try {
+        $formulaire->handleRequest($request);
+    } catch (\Exception $e) {
+      var_dump ("failed : ".$e->getMessage());
+    }
+      if ($formulaire->isSubmitted() && $formulaire->isValid()){
+      $data = $formulaire->getData();
+              $task->setStade( $data->isStade());
               $task->setContent( $data->getContent());
-              if(!$data->isImportance()){
-                $task->setImportance("0");
-              }else{
-                $task->setImportance("1");
-              }
-              if(!$data->getCreatedAt()){
-                $task->setCreatedAt(new DateTimeImmutable('now'));
-              }
-              $task->setCreatedAt($data->getCreatedAt());
+              $task->setImportance($data->isImportance());
               $task->setModifiedAt(new DateTimeImmutable('now'));
               //$task.setUsers("Session.name");
               $entityManager->persist($task);
-
           $entityManager->flush();
           return $this->redirectToRoute('app_home');
+      }
+      return $this->render('detail_task/index.html.twig', ['task' => $task,'form' => $formulaire->createView()]);
     }
-    return $this->render('detail_task/index.html.twig', ['task' => $task,'form' => $form->createView()]);
-}
 }

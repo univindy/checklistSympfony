@@ -16,14 +16,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TaskController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(?Task $task,TaskRepository $TaskRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(?Task $task,TaskRepository $TaskRepository, Request $_request, EntityManagerInterface $entityManager): Response
     {
 
         if(!$task){
             $task = new Task();
         }
         $form = $this->createForm(TaskFormType::class, $task);
-        $form->handleRequest($request);
+        $form->handleRequest($_request);
         if ($form->isSubmitted() && $form->isValid()){
             $data = $form->getData();
             //dd($data);
@@ -46,7 +46,7 @@ class TaskController extends AbstractController
             $entityManager->flush();
         }
         $tasks = $TaskRepository->findBy([], ['Stade' => 'DESC']);
-        return $this->render('task\index.html.twig', ['tasks' => $tasks,'form' => $form->createView(),]);
+        return $this->render('task\index.html.twig', ['tasks' => $tasks,'form' => $form->createView()]);
     }
 
 }
