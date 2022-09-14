@@ -11,8 +11,6 @@ class GestionController extends AbstractController
     #[Route('/gestion', name: 'app_gestion')]
     public function index(): Response
     {
-        return $this->render('gestion/index.html.twig', [
-            'controller_name' => 'GestionController',
-        ]);
+        return $this->render('gestion/index.html.twig');
     }
 }

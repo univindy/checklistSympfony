@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TaskController extends AbstractController
 {
-        #[Route('/task', name: 'app_task')]
+        #[Route('/', name: 'app_home')]
         public function index(TaskRepository $TaskRepository): Response
         {
             $tasks = $TaskRepository->findAll();
