@@ -4,10 +4,30 @@
 
 {% block body %}
 <div class="container">
-<ul>
-{% for task in tasks %}
-<li>{{task}}</li>
-{% endfor %}
+<div class="row my-3">
+<a name="" id="" class=" mx-center btn btn-success col-2" href="/admin?crudAction=new&crudControllerFqcn=App%5CController%5CAdmin%5CTaskCrudController" role="button"> Créer une tâche</a>
+</div>
+
+<ul class="list-group">
+	{% for task in tasks %}
+    <a class="btn" href="/detail/task/{{task.getId()}}">
+  <li class="list-group-item d-flex justify-content-between align-items-center	{{task.isStade() == 1 ? "bg-primary" : "bg-dark"}}">
+  {% if task.getImportance() == "1" %}
+   <span class="badge bg-danger col-1">Important</span>
+   {% endif %}
+   <div class="col-7 mx-auto">
+    {{task.content()}} 
+    </div>
+    <div class="col-2">
+    {{task.getCreatedAt() is empty ? "" : task.getCreatedAt()|date("m-d-Y H:i:s")}}
+    </div>
+    <span class="badge {{task.isStade() != 1 ? "bg-success" : "bg-danger"}}">{{task.isStade() == 1 ? "Active" : "Terminé"}}</span>
+  </li>
+  </a>
+			{% endfor %}
 </ul>
+</div>
+
+
 </div>
 {% endblock %}
