@@ -22,8 +22,8 @@ class Task
     #[ORM\Column]
     private ?bool $Stade = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $Importance = null;
+    #[ORM\Column]
+    private ?bool $Importance = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $CreatedAt = null;
@@ -31,8 +31,6 @@ class Task
     #[ORM\Column]
     private ?\DateTimeImmutable $ModifiedAt = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Image = null;
 
     #[ORM\ManyToOne(inversedBy: 'Task')]
     private ?Users $users = null;
@@ -66,12 +64,7 @@ class Task
         return $this;
     }
 
-    public function getImportance(): ?string
-    {
-        return $this->Importance;
-    }
-
-    public function setImportance(string $Importance): self
+    public function setImportance(bool $Importance): self
     {
         $this->Importance = $Importance;
 
@@ -102,18 +95,6 @@ class Task
         return $this;
     }
 
-    public function getImage(): ?string
-    {
-        return $this->Image;
-    }
-
-    public function setImage(?string $Image): self
-    {
-        $this->Image = $Image;
-
-        return $this;
-    }
-
     public function getUsers(): ?Users
     {
         return $this->users;
@@ -124,5 +105,10 @@ class Task
         $this->users = $users;
 
         return $this;
+    }
+
+    public function isImportance(): ?bool
+    {
+        return $this->Importance;
     }
 }
