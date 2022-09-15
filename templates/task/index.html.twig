@@ -1,13 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Todo List{% endblock %}
-
+{% block title %}Todo List
+{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
+{% endblock %}
 {% block body %}
 <div class="container">
-<ul>
-{% for task in tasks %}
-<li>{{task}}</li>
-{% endfor %}
+    <div class="my-3 row" style="font-size: 25px;">
+		{{ form_start(form) }}
+			{{ form_row(form.Content) }}
+			{{ form_row(form.Importance) }}
+		<button class="btn btn-success mx-5 col-2" type="submit">Créer la tâche</button>
+		<div class="col-3">
+			{{ form_errors(form) }}
+		</div>
+	{{ form_end(form) }}
+	</div>
+
+<ul class="list-group mx-auto col-10 my-5">
+	{% for task in tasks %}
+    <a class="btn row-fluid col-md-auto" href="/detail/task/{{task.getId()}}">
+  <li class="list-group-item d-flex justify-content-between align-items-center	col-md-auto {{task.isStade() == 1 ? "bg-primary" : "bg-dark"}}">
+  {% if task.isImportance() == "1" %}
+   <span class="badge bg-danger col-1 col-md-auto col-lg-auto col-sm-auto">Important</span>
+   {% endif %}
+   <div class="col-7 col-md-auto col-lg-auto col-sm-auto mx-auto mx-1">
+    {{task.content()}} 
+    </div>
+     {% if task.getAuteur() %}
+   <div class="col-1 col-md-auto col-lg-auto col-sm-auto mx-1">{{task.getAuteur().name}}</div>
+   {% endif %}
+    <div class="col-2 col-md-auto col-lg-auto col-sm-auto">
+    . {{task.getCreatedAt() is empty ? "" : task.getCreatedAt()|date("m-d-Y")}}
+    </div>
+    <object class"{{task.isStade() == 1 ? "bg-primary" : "bg-dark"}} col-md-auto col-lg-auto col-sm-auto">
+  <a class="btn" href="/status/task/{{task.getId()}}">
+    <span class="badge {{task.isStade() != 1 ? "bg-success" : "bg-warning"}}">{{task.isStade() == 1 ? "En cours" : "Terminé"}}</span>
+    </a>
+    </object>
+        <object class"{{task.isStade() == 1 ? "bg-primary" : "bg-dark"}} col-md-auto col-lg-auto col-sm-auto">
+  <a class="btn" href="/delete/task/{{task.getId()}}">
+    <span class="badge bg-danger">X</span>
+    </a>
+    </object>
+  </li>
+  </a>
+			{% endfor %}
 </ul>
+</div>
+
+
 </div>
 {% endblock %}

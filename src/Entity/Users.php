@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[ApiResource]
@@ -38,9 +39,13 @@ class Users
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Task::class)]
     private Collection $Task;
 
+    #[ORM\OneToMany(mappedBy: 'Auteur', targetEntity: Task::class)]
+    private Collection $tasks;
+
     public function __construct()
     {
         $this->Task = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,5 +129,13 @@ class Users
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
     }
 }
