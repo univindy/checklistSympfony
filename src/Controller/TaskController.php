@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Controller;
-
 use App\Entity\Task;
 use App\Form\TaskFormType;
 use Monolog\DateTimeImmutable;
 use App\Repository\TaskRepository;
+use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,9 +16,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TaskController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(?Task $task,TaskRepository $TaskRepository, Request $_request, EntityManagerInterface $entityManager): Response
+    public function index(?Task $task,TaskRepository $TaskRepository,UsersRepository $UsersRepository, Request $_request, EntityManagerInterface $entityManager): Response
     {
-
         if(!$task){
             $task = new Task();
         }
@@ -37,7 +36,8 @@ class TaskController extends AbstractController
                   }
                 $task->setCreatedAt(new DateTimeImmutable('now'));
                 $task->setModifiedAt(new DateTimeImmutable('now'));
-                //$task.setUsers("Session.name");
+                $Auteur = $UsersRepository->findOneBy(['name' => 'Admin']);
+                $task->setAuteur($Auteur);
                 $entityManager->persist($task);
             }else{
                 $TaskRepository->findBy(['id' => $task->getId()]);
@@ -45,7 +45,24 @@ class TaskController extends AbstractController
             }
             $entityManager->flush();
         }
-        $tasks = $TaskRepository->findBy([], ['Stade' => 'DESC']);
+        $tasks = $TaskRepository->findBy([], ['Stade' => 'DESC','CreatedAt' => 'DESC']);
+        return $this->render('task\index.html.twig', ['tasks' => $tasks,'form' => $form->createView()]);
+    }
+
+    #[Route('/status/task/{id}', name: 'statut')]
+    public function chageStatuts(TaskRepository $TaskRepository,int $id, EntityManagerInterface $entityManager)
+    {
+        $task = new Task();
+        $form = $this->createForm(TaskFormType::class, $task);
+        $task = $TaskRepository->findOneBy(array('id' => $id));
+        if ($task->isStade()){
+            $task->setStade(0);
+        }else{
+            $task->setStade(1);
+        }
+        $entityManager->persist($task);
+        $entityManager->flush();
+        $tasks = $TaskRepository->findBy([],  ['Stade' => 'DESC','CreatedAt' => 'DESC']);
         return $this->render('task\index.html.twig', ['tasks' => $tasks,'form' => $form->createView()]);
     }
 

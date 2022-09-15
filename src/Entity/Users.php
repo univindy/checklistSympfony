@@ -39,9 +39,13 @@ class Users
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Task::class)]
     private Collection $Task;
 
+    #[ORM\OneToMany(mappedBy: 'Auteur', targetEntity: Task::class)]
+    private Collection $tasks;
+
     public function __construct()
     {
         $this->Task = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -125,5 +129,13 @@ class Users
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
     }
 }

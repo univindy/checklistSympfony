@@ -31,9 +31,9 @@ class Task
     #[ORM\Column]
     private ?\DateTimeImmutable $ModifiedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'tasks')]
+    private ?Users $Auteur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Task')]
-    private ?Users $users = null;
 
     public function getId(): ?int
     {
@@ -110,5 +110,17 @@ class Task
     public function isImportance(): ?bool
     {
         return $this->Importance;
+    }
+
+    public function getAuteur(): ?Users
+    {
+        return $this->Auteur;
+    }
+
+    public function setAuteur(?Users $Auteur): self
+    {
+        $this->Auteur = $Auteur;
+
+        return $this;
     }
 }
