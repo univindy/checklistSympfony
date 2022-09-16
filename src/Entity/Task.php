@@ -95,18 +95,6 @@ class Task
         return $this;
     }
 
-    public function getUsers(): ?Users
-    {
-        return $this->users;
-    }
-
-    public function setUsers(?Users $users): self
-    {
-        $this->users = $users;
-
-        return $this;
-    }
-
     public function isImportance(): ?bool
     {
         return $this->Importance;

@@ -36,9 +36,6 @@ class Users
 
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Task::class)]
-    private Collection $Task;
-
     #[ORM\OneToMany(mappedBy: 'Auteur', targetEntity: Task::class)]
     private Collection $tasks;
 
@@ -101,19 +98,11 @@ class Users
         return $this;
     }
 
-    /**
-     * @return Collection<int, Task>
-     */
-    public function getTask(): Collection
-    {
-        return $this->Task;
-    }
-
     public function addTask(Task $task): self
     {
         if (!$this->Task->contains($task)) {
             $this->Task->add($task);
-            $task->setUsers($this);
+            $task->setAuteur($this);
         }
 
         return $this;
@@ -123,8 +112,8 @@ class Users
     {
         if ($this->Task->removeElement($task)) {
             // set the owning side to null (unless already changed)
-            if ($task->getUsers() === $this) {
-                $task->setUsers(null);
+            if ($task->getAuteur() === $this) {
+                $task->setAuteur(null);
             }
         }
 
